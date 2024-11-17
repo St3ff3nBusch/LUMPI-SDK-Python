@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import os
 class CameraViewer:
-    def __init__(self, data_path, meta,session,mask_flag):
+    def __init__(self, data_path, meta, session, mask_flag):
         print("loading camera "+str(session))
         try:
             self.rvec=np.array(meta["session"][session]['rvec'])
@@ -30,7 +30,7 @@ class CameraViewer:
             print("Camera "+str(session)+" video not found")
         self.mask=[]
         self.mask_capture=[]  
-        if(mask_flag):
+        if mask_flag:
             try:
                 self.mask_capture=cv2.VideoCapture(self.mask_path)
                 ret, self.mask = self.mask_capture.read()
@@ -51,8 +51,6 @@ class CameraViewer:
             self.get_frustum_planes(1,200)
         except:
             print("Could not calculate frustum")
-        
-        #print("cam"+str(self.decive_id)+":"+str(self.inverse_extrinsic))
        
     def calculate_fov(self):
         self.fov_x = 2 * np.degrees(np.arctan2(self.size[1] , (2 * self.intrinsic[0, 0])))
@@ -88,7 +86,7 @@ class CameraViewer:
             po[2]=-plane[3]/plane[2]
         numerator = np.dot(po-p1, plane[:3])  
         if denominator == 0:
-            print("denominator")
+        
             return []  
         t = -numerator / denominator
         if t < 0 or t > 1:
@@ -154,7 +152,7 @@ class CameraViewer:
             return []
          id=np.where((pts[:,0]< self.size[1]) &(pts[:, 0] >0)&(pts[:,1]< self.size[0]) &(pts[:, 1] >0))
          return pts[id[0],:]
-    def set_frame(self,frame_number,mask_flag):
+    def set_frame(self, frame_number, mask_flag):
         self.frame_number=frame_number
         self.img_capture.set(cv2.CAP_PROP_POS_FRAMES, int(self.frame_number))
         ret, self.img = self.img_capture.read()
@@ -169,13 +167,14 @@ class CameraViewer:
                 self.img[id[0],id[1],:]=self.img[id[0],id[1],:]*0.5+0.5*self.mask[id[0],id[1],:]
     def set_frame_to_point_cloud_index(self,index):
            self.set_frame(int(index/10.*self.fps))
-           cv2.putText(self.img,"frame: "+str(self.frame_number)+"time: "+"{:.2f}".format(self.frame_number/self.fps),[10,50],1,1.4,[0,255,0],2)
+           cv2.putText(img=self.img, text="frame: "+str(self.frame_number)+" time: "+"{:.2f}".format(self.frame_number/self.fps), org=(10, 50), fontFace=1, fontScale=1.4, color=[0, 255, 0], thickness=2)
     def plot_frame(self,wait_time_ms):
         if(self.img is None):
             print("empty Image"+str(self.frame_number))
             return
         cv2.imshow("LUMPI CAM"+str(self.decive_id),self.img )
-        return cv2.waitKey(wait_time_ms)
+        key = cv2.waitKey(wait_time_ms)
+        return key
     def plot_point_cloud(self,pc,color):
         if(len(pc)<1):
             return

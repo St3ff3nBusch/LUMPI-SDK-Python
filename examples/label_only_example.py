@@ -1,7 +1,7 @@
-from objects.LUMPIParser import LUMPIParser
+from objects.LumpiParser import LumpiParser
 import os
 if __name__ == '__main__':
-    lp=LUMPIParser(path="/media/busch/ExternSSD1T/Label")
+    lp=LumpiParser(path="/media/busch/ExternSSD1T/Label")
     measurement_id=3
     lp.read_track(os.path.join(lp.path,"Measurement"+str(measurement_id),"Label.csv"))
     lp.read_all_cameras(measurement_id,True)

@@ -1,9 +1,9 @@
-from objects.LUMPIParser import LUMPIParser
+from objects.LumpiParser import LumpiParser
 from objects.PointCloudFilter import PointCloudFilter
 import os
 import numpy as np
 if __name__ == '__main__':
-    lp=LUMPIParser(path="/home/busch/LUMPI_test_data")
+    lp=LumpiParser(path="/home/busch/LUMPI_test_data")
 
     #Initilaize Measurement
     measurement_id=4
