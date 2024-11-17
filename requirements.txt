@@ -4,3 +4,4 @@ opencv-python==4.10.0.84
 pandas==2.0.3
 plyfile==1.0.3
 tqdm==4.67.0
+notebook==7.2.2

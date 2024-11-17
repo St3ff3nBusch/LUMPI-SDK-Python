@@ -1,18 +1,18 @@
 from objects.LUMPIParser import LUMPIParser
 from objects.PointCloudFilter import PointCloudFilter
-from objects.PointCloudVisulaizer import PointCloudVisulaizer
+from objects.PointCloudVisualizer import PointCloudVisualizer
 import os
 import numpy as np
 if __name__ == '__main__':
     #Change measurement id
-    measurement_id=5
-    lp=LUMPIParser("/media/busch/ExternSSD1T/LUMPI")
+    measurement_id=4
+    lp=LUMPIParser("/home/busch/LUMPI_test_data")
     lp.read_point_cloud_file_list(measurement_id)
-    lp.read_track(os.path.join(lp.path,"Experiment"+str(measurement_id),"SGT.csv"))
+    lp.read_track(os.path.join(lp.path,"Measurement"+str(measurement_id),"Label.csv"))
     filter=PointCloudFilter()
-    filter.read_background(os.path.join(lp.path,"Experiment"+str(measurement_id),"background")) 
+    filter.read_background(os.path.join(lp.path,"Measurement"+str(measurement_id),"background")) 
     lp.read_point_cloud(0)
-    vis=PointCloudVisulaizer()
+    vis=PointCloudVisualizer()
     vis.init_camera(lp.get_xyz(),10)
     for i in range(len(lp.point_cloud_files)):
         vis.vis.clear_geometries()

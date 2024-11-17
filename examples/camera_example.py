@@ -3,18 +3,20 @@ from objects.PointCloudFilter import PointCloudFilter
 import os
 import numpy as np
 if __name__ == '__main__':
-    lp=LUMPIParser(path="/media/busch/ExternSSD1T/LUMPI")
+    lp=LUMPIParser(path="/home/busch/LUMPI_test_data")
+
     #Initilaize Measurement
-    measurement_id=5
+    measurement_id=4
     lp.read_point_cloud_file_list(measurement_id)
+    print(lp.lidarPath)
     lp.read_all_cameras(measurement_id,True)
-    lp.read_track(os.path.join(lp.path,"Experiment"+str(measurement_id),"SGT.csv"))
+    lp.read_track(os.path.join(lp.path,"Measurement"+str(measurement_id),"Label.csv"))
     filter=PointCloudFilter()
-    filter.read_background(os.path.join(lp.path,"Experiment"+str(measurement_id),"background"))  
+    filter.read_background(os.path.join(lp.path,"Measurement"+str(measurement_id),"background"))  
     #Chose camera
-    cam=lp.cameras[0]
+    cam=lp.cameras[2]
     time=0
-    for i in range(100):
+    for i in range(10):
         time+=1./cam.fps
         next_time=time+1/cam.fps
         index=int(np.floor(time*10))
@@ -39,5 +41,6 @@ if __name__ == '__main__':
         #Interpolate bounding boxes to camera frame
         bb=lp.get_bounding_boxes_at(time)
         cam.plot_bounding_boxes_3D(bb,[255,0,0])
-        cam.plot_frame(0)
+        if(27==cam.plot_frame(0)):#exit with ECP
+            break
         

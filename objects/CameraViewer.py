@@ -3,35 +3,57 @@ import cv2
 import os
 class CameraViewer:
     def __init__(self, data_path, meta,session,mask_flag):
-         self.rvec=np.array(meta["session"][session]['rvec'])
-         self.intrinsic=np.array(meta["session"][session]['intrinsic'])
-         self.tvec=np.array(meta["session"][session]['tvec'])
-         self.inverse_extrinsic=np.array(meta["session"][session]['extrinsic'])
-         self.extrinsic=np.linalg.inv(self.inverse_extrinsic)
-         self.distortion=np.array(meta["session"][session]['distortion'])
-         self.fps=meta["session"][session]['fps']
-         self.decive_id=meta["session"][session]['deviceId']
-         self.img_path=os.path.join(data_path,"cam",str(meta["session"][session]["deviceId"]),"video.mp4")
-         self.mask_path=os.path.join(data_path,"cam",str(meta["session"][session]["deviceId"]),"mask.mp4")
-         self.img_capture=cv2.VideoCapture(self.img_path)
-         self.frame_number=0
-         self.img_capture.set(cv2.CAP_PROP_POS_FRAMES, int(self.frame_number))
-         self.last_frame_number=self.img_capture.get(cv2.CAP_PROP_BUFFERSIZE)
-         ret, self.img = self.img_capture.read()
-         self.size=self.img.shape
-         self.lines= [[0, 1], [1, 2], [2, 3], [0, 3],
-         [4, 5], [5, 6], [6, 7], [4, 7],
-         [0, 4], [1, 5], [2, 6], [3, 7]]
-         self.fov_x =1
-         self.fov_y =1
-         self.planes={}
-         self.transformed_planes = {}
-         self.calculate_fov()
-         self.get_frustum_planes(1,200)
+        print("loading camera "+str(session))
+        try:
+            self.rvec=np.array(meta["session"][session]['rvec'])
+            self.intrinsic=np.array(meta["session"][session]['intrinsic'])
+            self.tvec=np.array(meta["session"][session]['tvec'])
+            self.inverse_extrinsic=np.array(meta["session"][session]['extrinsic'])
+            self.extrinsic=np.linalg.inv(self.inverse_extrinsic)
+            self.distortion=np.array(meta["session"][session]['distortion'])
+            self.fps=meta["session"][session]['fps']
+            self.decive_id=meta["session"][session]['deviceId']
+            self.img_path=os.path.join(data_path,"cam",str(meta["session"][session]["deviceId"]),"video.mp4")
+            self.mask_path=os.path.join(data_path,"cam",str(meta["session"][session]["deviceId"]),"mask.mp4")
+        except:
+            print("Camera meta "+str(session)+" not found")
+        self.frame_number=0
+        self.size= np.array([0, 0])
+        self.img= np.array([0, 0])
+        try:
+            self.img_capture=cv2.VideoCapture(self.img_path)
+            self.img_capture.set(cv2.CAP_PROP_POS_FRAMES, int(self.frame_number))
+            ret, self.img = self.img_capture.read()
+            self.size=self.img.shape
+            self.last_frame_number=self.img_capture.get(cv2.CAP_PROP_BUFFERSIZE)
+        except:
+            print("Camera "+str(session)+" video not found")
+        self.mask=[]
+        self.mask_capture=[]  
+        if(mask_flag):
+            try:
+                self.mask_capture=cv2.VideoCapture(self.mask_path)
+                ret, self.mask = self.mask_capture.read()
+                self.mask_capture.set(cv2.CAP_PROP_POS_FRAMES, int(self.frame_number))
+                if self.size[0]!=self.mask.shape[0] or self.size[1]!=self.mask.shape[1]:
+                    self.size=self.mask.shape
+            except:
+                print("Camera "+str(session)+" mask not found")
+        self.lines= [[0, 1], [1, 2], [2, 3], [0, 3],
+        [4, 5], [5, 6], [6, 7], [4, 7],
+        [0, 4], [1, 5], [2, 6], [3, 7]]
+        self.fov_x =1
+        self.fov_y =1
+        self.planes={}
+        self.transformed_planes = {}
+        try:
+            self.calculate_fov()
+            self.get_frustum_planes(1,200)
+        except:
+            print("Could not calculate frustum")
+        
         #print("cam"+str(self.decive_id)+":"+str(self.inverse_extrinsic))
-         if(mask_flag):
-            self.mask_capture=cv2.VideoCapture(self.mask_path)
-            ret, self.mask = self.mask_capture.read()
+       
     def calculate_fov(self):
         self.fov_x = 2 * np.degrees(np.arctan2(self.size[1] , (2 * self.intrinsic[0, 0])))
         self.fov_y = 2 * np.degrees(np.arctan2(self.size[0] , (2 * self.intrinsic[1, 1])))
@@ -136,18 +158,24 @@ class CameraViewer:
         self.frame_number=frame_number
         self.img_capture.set(cv2.CAP_PROP_POS_FRAMES, int(self.frame_number))
         ret, self.img = self.img_capture.read()
-        if(mask_flag):
+        if(mask_flag ):
             self.mask_capture.set(cv2.CAP_PROP_POS_FRAMES, int(self.frame_number))
             ret, self.mask = self.mask_capture.read()
-            mask=np.sum(self.mask,axis=2)   
-            id=np.where(mask>0)
-            self.img[id[0],id[1],:]=self.img[id[0],id[1],:]*0.5+0.5*self.mask[id[0],id[1],:]
+            if(self.img is None):
+                self.img=self.mask
+            elif(self.mask is not None):
+                mask=np.sum(self.mask,axis=2)   
+                id=np.where(mask>0)
+                self.img[id[0],id[1],:]=self.img[id[0],id[1],:]*0.5+0.5*self.mask[id[0],id[1],:]
     def set_frame_to_point_cloud_index(self,index):
            self.set_frame(int(index/10.*self.fps))
            cv2.putText(self.img,"frame: "+str(self.frame_number)+"time: "+"{:.2f}".format(self.frame_number/self.fps),[10,50],1,1.4,[0,255,0],2)
     def plot_frame(self,wait_time_ms):
+        if(self.img is None):
+            print("empty Image"+str(self.frame_number))
+            return
         cv2.imshow("LUMPI CAM"+str(self.decive_id),self.img )
-        cv2.waitKey(wait_time_ms)
+        return cv2.waitKey(wait_time_ms)
     def plot_point_cloud(self,pc,color):
         if(len(pc)<1):
             return
