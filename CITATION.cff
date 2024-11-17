@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "LUMPI Camera and Label Example"
+authors:
+  - family-names: "Busch"
+    given-names: "FirstName"
+    orcid: "https://orcid.org/0000-0002-5607-9040"
+date-released: "2023-11-18"
+version: "1.0.0"
+doi: "10.5281/zenodo.1234567"
+url: "https://github.com/St3ff3nBusch/LUMPI-SDK-Python"
+repository-code: "https://github.com/St3ff3nBusch/LUMPI-SDK-Python"
+license: "MIT"
