@@ -53,7 +53,7 @@ The **objects directory** contains helper classes to efficiently load LUMPI data
 ## Labels
 Unfortunately, not all labels were corrected manually, so all corrected labels are marked with a **score** of 4.
 The 555th label effort was focused on Measurements 4, 5, and 6 due to the denser point clouds.
-You could download the labels [here](www.asd.de). 
+You could download the labels [here](https://seafile.cloud.uni-hannover.de/f/793a2dc58f244a41b815/?dl=1). 
 
  The labels are provided as a CSV file with the following columns:
 - **time** in seconds
