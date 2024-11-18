@@ -16,27 +16,35 @@ Welcome to the LUMPI SDK repository. This SDK provides tools, examples, tutorial
 To install the LUMPI SDK, follow these steps:
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/lumpi-sdk.git
+    git clone https://github.com/St3ff3nBusch/LUMPI-SDK-Python.git
     ```
 2. Navigate to the project directory:
     ```sh
-    cd lumpi-sdk
+    cd LUMPI-SDK-Python
     ```
 3. Install the required dependencies:
     ```sh
     pip install -r requirements.txt
     ```
-4. To start the example, run from the lumpi-sdk root directory:
+4. To start the example, run from the LUMPI-SDK-Python root directory:
     ```sh
     python -m examples.[example_script_name]
     # Replace [example_script_name] with the desired example script name
     ```
     E.g., **python -m examples.label_only_example**
 ## Examples
-The **examples directory** contains scripts to display images, masks, bounding boxes, and point clouds using the LUMPI SDK. For instance, **camera-example.py** demonstrates how to visualize camera data, including images and masks. Similarly, **point_cloud_example.py** shows how to visualize point clouds. It uses the **LumpiParser** to load point cloud data and the **PointCloudFilter** to segment the background. The **PointCloudVisualizer** is then used to display the point clouds and draw 3D bounding boxes, with the background colored black and the foreground colored gray. You can find the scripts [here](examples). A small `test data set` is provided [here](https://seafile.cloud.uni-hannover.de/f/0f3c07a71b1949fe90c2/?dl=1) to test the SDK.
+The **examples directory** contains scripts to display images, masks, bounding boxes, and point clouds using the LUMPI SDK. For instance, **camera-example.py** demonstrates how to visualize camera data, including images and masks. Similarly, **point_cloud_example.py** shows how to visualize point clouds. It uses the **LumpiParser** to load point cloud data and the **PointCloudFilter** to segment the background. 
+  <img src="images/CameraExample.png" alt="Camera Impression" />
+The **PointCloudVisualizer** is then used to display the point clouds and draw 3D bounding boxes, with the background colored black and the foreground colored gray. You can find the scripts [here](examples). A small `test data set` is provided [here](https://seafile.cloud.uni-hannover.de/f/0f3c07a71b1949fe90c2/?dl=1) to test the SDK.<p float="left">
+  <img src="images/PointCloudExample.png" alt="Point Cloud Impression" >
+</p>
+
 
 Additionally, the **label_only_example.py** script demonstrates how to work with labels independently of point clouds or images. It shows how to load label data using the **LumpiParser**, allowing you to inspect the label data before downloading the sensor data. You can find the script [here](examples/label_only_example.py).
 You could download all labels [here](https://seafile.cloud.uni-hannover.de/f/793a2dc58f244a41b815/?dl=1) and display them directly with this script.
+ 
+ <img src="images/LabelExample.png" alt="Label Only Impression"/>
+
 A more detailed description is given by the following [tutorials](#tutorials).
 
 ## Tutorials
