@@ -10,7 +10,7 @@ if __name__ == '__main__':
     lp.read_point_cloud_file_list(measurement_id)
     lp.read_track("/media/busch/ExternSSD1T/Label/Measurement4/Label.csv")
     vis=PointCloudVisualizer()
-    vis.init_camera(np.array([[100, 100, 5],[-100 ,-100, -5]]),100)
+    vis.init_camera(np.array([[100, 100, 5],[-100 ,-100, -5]]),1)
        # Plot bounding boxes
     for  i in lp.indexOrdered:
         vis.vis.clear_geometries()
