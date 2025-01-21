@@ -42,7 +42,7 @@ The **PointCloudVisualizer** is then used to display the point clouds and draw 3
 
 Additionally, the **camera_label_only_example.py** and **point_cloud_label_only_example.py** script demonstrates how to work with labels independently of point clouds or images. It shows how to load label data using the **LumpiParser**, allowing you to inspect the label data before downloading the sensor data. The fastest way to get an overview over the label is the **point_cloud_label_only_example.py** script because it shows only the raw 3D bounding boxes 
 
-You could download all labels [here](https://seafile.cloud.uni-hannover.de/f/793a2dc58f244a41b815/?dl=1) and display them directly with this script.
+You could download all labels [here](https://data.uni-hannover.de/vault/ikg/busch/LUMPI/labels.zip) and display them directly with this script.
  
  <img src="images/LabelExample.png" alt="Label Only Impression"/>
 
@@ -63,7 +63,7 @@ The **objects directory** contains helper classes to efficiently load LUMPI data
 ## Labels
 Not all labels were manually corrected; those that were are marked with a **score** of 4.
 The 555 hour label effort was focused on Measurements 4, 5, and 6 due to the denser point clouds.
-You could download the labels [here](https://seafile.cloud.uni-hannover.de/f/793a2dc58f244a41b815/?dl=1). 
+You could download the labels [here](https://data.uni-hannover.de/vault/ikg/busch/LUMPI/labels.zip). 
 
 The labels are provided as a CSV file with the following columns:
 - **time** in seconds
