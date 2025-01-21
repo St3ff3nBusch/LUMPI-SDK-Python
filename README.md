@@ -35,7 +35,7 @@ To install the LUMPI SDK, follow these steps:
 ## Examples
 The **examples directory** contains scripts to display images, masks, bounding boxes, and point clouds using the LUMPI SDK. For instance, **camera-example.py** demonstrates how to visualize camera data, including images and masks. Similarly, **point_cloud_example.py** shows how to visualize point clouds. It uses the **LumpiParser** to load point cloud data and the **PointCloudFilter** to segment the background. 
   <img src="images/CameraExample.png" alt="Camera Impression" />
-The **PointCloudVisualizer** is then used to display the point clouds and draw 3D bounding boxes, with the background colored black and the foreground colored gray. You can find the scripts [here](examples). A small `test data set` is provided [here](https://seafile.cloud.uni-hannover.de/f/0f3c07a71b1949fe90c2/?dl=1) to test the SDK.<p float="left">
+The **PointCloudVisualizer** is then used to display the point clouds and draw 3D bounding boxes, with the background colored black and the foreground colored gray. You can find the scripts [here](examples). A small `test data set` is provided [here](https://data.uni-hannover.de/vault/ikg/busch/LUMPI/test_data.zip) to test the SDK.<p float="left">
   <img src="images/PointCloudExample.png" alt="Point Cloud Impression" >
 </p>
 
