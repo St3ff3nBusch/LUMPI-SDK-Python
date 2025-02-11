@@ -7,10 +7,11 @@ import glob
 from plyfile import PlyData
 from objects.CameraViewer import CameraViewer
 class Pose:
-    def __init__(self,id,x,y,z,heading,l,w,h,shape,indices,time,classId=-1):
+    def __init__(self,id,x,y,z,heading,l,w,h,shape,indices,time,classId=-1,score=0,visibility=0,birdsEyeRectangle=np.asarray([0, 0, 0, 0])):
         self.position = np.asarray([x, y, z])
         self.heading = heading
         self.shape = shape
+        self.visibility = visibility
         self.dim = np.asarray([l, w, h]).astype(np.float64)
         self.time = time
         self.pc = []
@@ -18,7 +19,9 @@ class Pose:
         self.index = int(np.floor(float(time) * 10))
         self.indices = np.asarray(indices).astype(np.int64)
         self.classId = int(classId)
+        self.score=score
         self.u = [np.cos(self.heading), np.sin(self.heading), 0]
+        self.bridsEyeRectangle=birdsEyeRectangle
         self.corners = np.array([
         [-l / 2, -l / 2, l / 2, l / 2, -l / 2, -l / 2, l / 2, l / 2],
         [w / 2, -w / 2, -w / 2, w / 2, w / 2, -w / 2, -w / 2, w / 2],
@@ -80,7 +83,7 @@ class LumpiParser:
         df=pd.read_csv(path)
         data = pd.DataFrame(df[list(df)[:-1]]).to_numpy().astype(np.float64)
         for i in tqdm(range(data.shape[0])):
-            p=Pose(id=data[i,1],classId=data[i,7],time=data[i,0],x=data[i,9],y=data[i,10],z=data[i,11],heading=data[i,15],l=data[i,12],w=data[i,13],h=data[i,14],shape=[],indices=[])
+            p=Pose(id=data[i,1],classId=data[i,7],score=data[i,6],time=data[i,0],x=data[i,9],y=data[i,10],z=data[i,11],heading=data[i,15],l=data[i,12],w=data[i,13],h=data[i,14],shape=[],indices=[],visibility=data[i,8],birdsEyeRectangle=[data[i,2],data[i,3],data[i,4],data[i,5]])
             if p.id not in self.tracks:
                 self.tracks[p.id]={}
             self.tracks[p.id][p.index]=p 
@@ -140,3 +143,17 @@ class LumpiParser:
                 self.cameras.append(CameraViewer(data_path=data_path,meta=self.meta,session=s,mask_flag=mask_flag))
             except:
                 print("Could not load camera with session: "+s)
+    def write_tracks(self,path):
+        """
+        Writes the tracks to a CSV file.
+
+        Parameters:
+        path (str): The file path to write the tracks to.
+        """
+        with open(path, 'w') as f:
+            f.write("time,object id, 2d rectangle: top left x,top left y, width,height,score,class_id,visibility,3D box: center x,y,z,length, width ,height,heading,[optional arbitarry many double: shape parameter or point index or embeddings]\n")
+            for o in self.tracks:
+                for pk in self.tracks[o]:
+                  p = self.tracks[o][pk]
+                  line = f"{p.time},{p.id},{p.bridsEyeRectangle[0]},{p.bridsEyeRectangle[1]},{p.bridsEyeRectangle[2]},{p.bridsEyeRectangle[3]},{p.score},{p.classId},{p.visibility},{p.position[0]},{p.position[1]},{p.position[2]},{p.dim[0]},{p.dim[1]},{p.dim[2]},{p.heading},\n"
+                  f.write(line)

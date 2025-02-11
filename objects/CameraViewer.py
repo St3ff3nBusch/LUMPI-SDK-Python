@@ -5,6 +5,7 @@ class CameraViewer:
     def __init__(self, data_path, meta, session, mask_flag):
         print("loading camera "+str(session))
         try:
+            self.classDict={0:"pedestrian",1:"car",2:"bicycle",3:"motorcycle",4:"bus",5:"truck",6:"van",7:"unknown"}
             self.rvec=np.array(meta["session"][session]['rvec'])
             self.intrinsic=np.array(meta["session"][session]['intrinsic'])
             self.tvec=np.array(meta["session"][session]['tvec'])
@@ -191,3 +192,10 @@ class CameraViewer:
             cv2.putText(self.img,str(o),lines[0][0],1,1,[0,0,0],1)
             for l in lines:
                 cv2.line(self.img,l[0],l[1],color,2) 
+                
+    def plot_class_label(self, pose):
+        s = "objId:" + str(pose.id) + " class:" + str(pose.classId) + "=" + self.classDict[pose.classId]
+        (text_width, text_height), baseline = cv2.getTextSize(s, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+        x, y = 100, 100
+        cv2.rectangle(self.img, (x, y - text_height - baseline), (x + text_width, y + baseline), (255, 255, 255), cv2.FILLED)
+        cv2.putText(self.img, s, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
